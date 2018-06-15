@@ -1,0 +1,19 @@
+#!/bin/sh
+XMLPARSER="/usr/bin/tinyxmlparser"
+CONF_STREAMSERVER="/etc/conf.d/config_streamserver.xml"
+ANONYMOUSVIEWING="/root/network/rtsp/anonymousviewing"
+RTSP="/etc/init.d/rtsps"
+check_anonymousviewing()
+{
+	CURRENT_ANONYMOUSVIEWING=`${XMLPARSER} -x ${ANONYMOUSVIEWING} -f ${CONF_STREAMSERVER}`
+	return ${CURRENT_ANONYMOUSVIEWING}
+}
+
+check_anonymousviewing
+
+if [ "$?" = "0" ]; then
+	${RTSP} restart
+else
+	${RTSP} reload
+fi
+exit 0

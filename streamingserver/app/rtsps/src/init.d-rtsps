@@ -1,0 +1,114 @@
+#!/bin/sh
+#
+# rtsps: This starts and stops rtsp server.
+#
+# description: RTSP streaming server
+#
+# processname: /usr/sbin/rtsp
+# config: /etc/conf.d/stream_server_config.xml
+# pidfile: /var/run/rtsps.pid
+set -a
+
+PATH=/sbin:/bin:/usr/bin:/usr/sbin
+
+# Source function library.
+. /etc/init.d/functions
+
+# Get config.
+test -f /var/run/netstatus && . /var/run/netstatus
+
+prog="rtsps"
+args="-a $IP_ADDR -c /etc/conf.d/config_streamserver.xml -q /etc/conf.d/config_qos.xml -d"
+binpath="/usr/sbin/rtsps"
+pidfile="/var/run/rtsps.pid"
+scriptname=`echo $0 | sed 's/^.*rcS.d\///g'`
+
+# seamless count
+eval `confclient -g seamlessrecording -p 9`
+if  [ "$seamlessrecording_guid0_number" -ne "" ] ||
+	[ "$seamlessrecording_guid1_number" -ne "" ] ||
+	[ "$seamlessrecording_guid2_number" -ne "" ]; then
+# clear all seamless number and force enable seamless recording,
+# rtsp will trigger seamless event when seamlessrecording_guidx_id is not empty
+confclient -s "seamlessrecording_guid0_number=0&seamlessrecording_guid1_number=0&seamlessrecording_guid2_number=0" -p 9
+fi
+
+[ -f $binpath ] || exit 1
+
+start(){
+	echo -n "Starting $prog: "
+	start-stop-daemon -S -q -n $prog -x $binpath -p $pidfile -- $args
+	echo "."
+	usleep 300000
+	videotext=`confclient -g videoin_c0_text -t Value -p 99 -b`
+	/usr/bin/fifocmd -p /var/run/ss/controlfifo -d "<data><location>$videotext</location></data>"	
+}
+
+waitprog(){
+        test -f $pidfile && usleep 100000 || return 0
+        test -f $pidfile && usleep 100000 || return 0
+		test -f $pidfile && usleep 100000 || return 0
+        test -f $pidfile || return 0
+        return 1
+}
+
+waitdie(){
+	while [ -n "$1" ]
+	do
+		test -e /proc/$1 && usleep 100000 || return 0
+	done
+}
+
+resetsession(){
+	/usr/sbin/sessionmgr 0 0 2
+	echo "<connectstatus><totalconnection>0</totalconnection></connectstatus>" > /var/run/ss/conninfo
+}
+
+stop(){
+	echo -n "Stopping $prog: "
+	if [ -f $pidfile ]
+	then
+		rtspspid=`cat $pidfile`
+		test -e /proc/$rtspspid || (rm $pidfile; return 1)
+	else
+		start-stop-daemon -K -s 9 -q -x $binpath
+	fi
+	start-stop-daemon -K -q -x $binpath
+	echo "."
+	waitprog || start-stop-daemon -K -s 9 -q -x $binpath; rm $pidfile
+	waitdie $rtspspid
+	echo "."
+}
+
+reload(){
+	echo -n "Reloading configuration $prog: "	
+	start-stop-daemon -K -s 10 -q -n $prog -p $pidfile
+	#test -f /var/run/rtsps.pid && kill -10 `cat /var/run/rtsps.pid`
+	echo "."
+}
+
+# See how we were called.
+case "$1" in
+	start)
+		/bin/date > /var/run/init.d/$scriptname
+		start
+		;;
+	stop)
+		stop
+		resetsession
+		;;
+	reload)
+		reload
+		;;
+	restart)
+		stop
+		resetsession
+		start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|reload}"
+		exit 1
+esac
+
+exit 0
+

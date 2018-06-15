@@ -1,0 +1,610 @@
+/*
+ *******************************************************************************
+ * $Header$
+ *
+ *  Copyright (c) 2006-2010 Vivotek Inc. All rights reserved.
+ *
+ *  +-----------------------------------------------------------------+
+ *  | THIS SOFTWARE IS FURNISHED UNDER A LICENSE AND MAY ONLY BE USED |
+ *  | AND COPIED IN ACCORDANCE WITH THE TERMS AND CONDITIONS OF SUCH  |
+ *  | A LICENSE AND WITH THE INCLUSION OF THE THIS COPY RIGHT NOTICE. |
+ *  | THIS SOFTWARE OR ANY OTHER COPIES OF THIS SOFTWARE MAY NOT BE   |
+ *  | PROVIDED OR OTHERWISE MADE AVAILABLE TO ANY OTHER PERSON. THE   |
+ *  | OWNERSHIP AND TITLE OF THIS SOFTWARE IS NOT TRANSFERRED.        |
+ *  |                                                                 |
+ *  | THE INFORMATION IN THIS SOFTWARE IS SUBJECT TO CHANGE WITHOUT   |
+ *  | ANY PRIOR NOTICE AND SHOULD NOT BE CONSTRUED AS A COMMITMENT BY |
+ *  | VIVOTEK INC.                                                    |
+ *  +-----------------------------------------------------------------+
+ *
+ * $History$
+ *
+ *******************************************************************************
+ */
+
+/*!
+ *******************************************************************************
+ * Copyright 2006-2010 Vivotek, Inc. All rights reserved.
+ *
+ * \file
+ * StreamingServer_ReleaseNote.txt
+ *
+ * \brief
+ * RTSP Streaming Server release note file
+ *
+ * \date
+ * 2007/11/24
+ *
+ * \author
+ * Louis Liao
+ *
+ *******************************************************************************
+ */
+
+CHANGE HISTORY
+
+[M]Update===RTSP streaming server to 2.5.8.0, RTSPS version to 1.3.6.0===
+[A]Add multicast address with audio and metadata
+[M]Fix compile warning
+
+The multicast-address of video, audio and metadata are separate from multicast_ipaddress
+Please update the config_streamserver.xml and also upgrade onvif to version 1.12.0.4
+
+RTSPS version to 1.3.5.3 (2016/02/24)
+[M] Update===RTSPS version to 1.3.5.4===
+[M] Support two seperated Quantization table for AMS2L platform
+AMS2l has two QT table tags (0xFFDB), which contain QT0 and QT1 correspondingly
+
+RTSP streaming server to 2.5.7.8 (2015/02/23)
+[M]Update===RTSP streaming server to 2.5.7.8===
+[M]Update CSeq when got d bit, prevent update sequence number too early(for Onvif test tool REPLAY-3-1-13)
+
+RTSPS version to 1.3.5.3 (2016/01/07)
+[M] Update===RTSPS version to 1.3.5.3===
+[BF] Call EventParser_ReleaseDataBuf after EventParser_GetData, whether we got metadata or not
+
+RTSP streaming server to 2.5.7.7 (2015/12/08)
+[M]Update===RTSP streaming server to 2.5.7.7===
+[M]Fix sequence number in Onvif RTP extension( pause/resume)
+[M]Workaround with onvif test tool(rate-control), stop the stream before setting MOD
+[A]Support I frame only header field
+
+RTSP streaming server to 2.5.7.6 (2015/11/27)
+[M]Update===RTSP streaming server to 2.5.7.6===
+[M]Modify Session parsing and make it  more flexible
+
+RTSP streaming server to 2.5.7.5 (2015/11/16)
+[M]Update===RTSP streaming server to 2.5.7.5===
+[M]Multiple Onvif profiles can go to only one VideoEncoderConfigToken, 
+so it would continue search if the VideoAnalyticsConfiguration is set to be blank
+
+RTSP streaming server to 2.5.7.4 (2015/08/13)
+-------------------------------------------------------------------------------
+1.Add the extension of "text on video" in Audio track
+
+RTSP streaming server to 2.5.7.3 (2015/08/13)
+-------------------------------------------------------------------------------
+1.Removed the extension of "text on video" in Metadata and Audio track
+
+RTSP streaming server to 2.5.7.2 , RTSPS version to 1.3.5.2 (2015/06/26)
+-------------------------------------------------------------------------------
+1.Corresponding modification after MOD can support play scale to pass ONVIF test tool
+2.Fix ondemand multicast not release properly under some scenario
+3.Adjust select timeout again since Multicast tested by Genetec Unit Certification might fail
+(NOTE:select timeout defined here may decide the polling interval of message queue
+ So, we should not set this value too large. Otherwise, Mediachannel thread won't get message from other threads immediately
+ On the other hand, we should not set this value too small, Otherwise, busy waiting will occur when process is idle
+ Now, 100ms maybe a suitable value!)
+  
+RTSP streaming server to 2.5.7.1 , RTSPS version to 1.3.5.1 (2015/05/26)
+-------------------------------------------------------------------------------
+1.Support JPEG Resolution over 2040x2040(JPEG RTP Extension defined by ONVIF)
+
+RTSP streaming server to 2.5.7.0 , RTSPS version to 1.3.5.0 (2015/04/27)
+-------------------------------------------------------------------------------
+1.Support H.265 Streaming
+2.Fix busy loop on Rossini
+3.Fix JPEG DQT Length check
+4.Enlarge RTSP over HTTP buffer size to avoid overflow
+5.Pass ONVIF Profile G "Rate-Control"(This is workaround. When MOD can support "Scale", we need to modify here!!)
+
+RTSP streaming server to 2.5.6.1 , RTSPS version to 1.3.4.1 (2015/03/30)
+-------------------------------------------------------------------------------
+1.Modified the packetization of metadata
+  (To follow the standard, one RTP packet can only contain one xml tag)
+2.Fix the issue of event loss, please update eventparser library to version 1.0.0.3 or above
+3.Fix wrong video title when playback using Vivotek plugin
+  
+RTSP streaming server to 2.5.6.0 , RTSPS version to 1.3.4.0 (2015/01/23)
+-------------------------------------------------------------------------------
+1.Support ONVIF Profile G
+2.Fix build error
+
+RTSP streaming server to 2.5.5.6 , RTSPS version to 1.3.3.2 (2014/10/03)
+-------------------------------------------------------------------------------
+1.Modified for eventparser to separate different shmem client buffer 
+  (please update eventparser_lib to version 1.0.0.2)
+2.Add expat_lib in rtspstreamingserver's config.mk to fix build error in some platform
+3.Fix RTSP crush, when metadata size is larger than buffer size
+4.Add sleep time to avoid busy loop when there is many rtsp connections in some platform
+  (SI's modification, define _SEND_SLEEP to enable sleep)
+
+RTSP streaming server to 2.5.5.5 , RTSPS version to 1.3.3.1 (2014/09/01)
+-------------------------------------------------------------------------------
+1. Support eventparser API for metadata streaming
+
+RTSP streaming server to 2.5.5.4 , RTSPS version to 1.3.3.0 (2014/8/15)
+-------------------------------------------------------------------------------
+1. Send the RTCP before the first I-frame is sent
+2. Don't close session when receiving MOD_INFO_ALLPLAYED from MOD
+3. Use different ShmemReadFlags for MOD no drop frame
+   (The above are general modification for Genetec video trickling issue)
+4. http port support rtsp describe command
+
+RTSPS version to 1.3.2.9 (2014/6/19)
+-------------------------------------------------------------------------------
+1. Let swatchdog restart the server when RTSPServer thread is lock
+   (Fix the mechanism¡AIf your RTSPS version is 1.3.2.8, please update RTSPS version up to 1.3.2.9)
+
+RTSP streaming server to 2.5.5.3 , RTSPS version to 1.3.2.8 (2014/6/16)
+-------------------------------------------------------------------------------
+1. Avoid busy loop in some platform with high resolution timer
+2. Let swatchdog restart the server when RTSPServer thread is lock
+
+RTSP streaming server to 2.5.5.2 , RTSPS version to 1.3.2.7 (2014/5/23)
+-------------------------------------------------------------------------------
+1. Follow the method of RTSP digest auth defined in RFC2069
+2. Query the metadata that happened after client initialization(please update shmem version to 1.0.2.17)
+    
+RTSPS version to 1.3.2.6 (2014/2/25)
+-------------------------------------------------------------------------------
+1. Modify size field in userdata of metadata streaming
+
+RTSPS version to 1.3.2.5 (2014/2/21)
+-------------------------------------------------------------------------------
+1. Fix userdata may overlap XML content in metadata streaming
+
+RTSP streaming server to 2.5.5.1 (2014/1/27)
+-------------------------------------------------------------------------------
+1. Support Ondemand Multicast Number to Maximum connection number
+2. Convert Local Time to UTC Time in Sender Report NTP timestamp
+
+RTSP streaming server to 2.5.5.0 (2013/12/20)
+-------------------------------------------------------------------------------
+1. Avoid sending audio RTCP before first RTP packet, to fix VLC player is not normal
+2. Fix digest authentication fail when using ffmpeg
+
+RTSP streaming server to 2.5.4.9 (2013/11/28)
+-------------------------------------------------------------------------------
+1. fix proxy server keep alive issue
+2. fix Onvif test tool 13.06 fail 
+
+RTSP streaming server to 2.5.4.8 (2013/10/16)
+-------------------------------------------------------------------------------
+1. Support On demand multicast for Omnicast Genetec Protocol and Onvif Protocol
+
+RTSP streaming server to 2.5.4.7 (2013/09/30)
+-------------------------------------------------------------------------------
+1. Support On demand multicast for Genetec Omnicast config tool 
+
+RTSP streaming server to 2.5.4.6 (2013/09/03)
+-------------------------------------------------------------------------------
+1. Fix basic authentication common bug 
+
+RTSP streaming server to 2.5.4.5, RTSPS version to 1.3.2.4 (2013/07/18)
+-------------------------------------------------------------------------------
+1. Support G.726
+
+RTSP streaming server to 2.5.4.4, RTSPS version to 1.3.2.3 (2013/06/03)
+-------------------------------------------------------------------------------
+1. Support Genetec MOD
+2. Support metadata event
+3. To follow RFC 3551, only set the marker bit in the first audio packet
+
+RTSP streaming server to 2.5.4.3, RTSPS version to 1.3.2.2 (2013/04/26)
+-------------------------------------------------------------------------------
+1. Change debugging level of some log messages from LOG_ERR to LOG_DEBUG
+
+RTSP streaming server to 2.5.4.2, RTSPS version to 1.3.2.1 (2013/04/03)
+-------------------------------------------------------------------------------
+1. Support different video/audio multicast addresses for ONVIF Test Tool 12.12
+2. Fix wrong G711 RTP payload type with always multicast
+
+RTSP streaming server to 2.5.4.1 (2013/04/03)
+-------------------------------------------------------------------------------
+1. Fix high CPU usage issue when the metadata build option is not enbaled
+
+RTSP streaming server to 2.5.4.0, RTSPS version to 1.3.2.0 (2013/03/15)
+-------------------------------------------------------------------------------
+1. Support metadata stream
+2. Support ONVIF audio backchannel
+
+RTSP streaming server to 2.5.3.9 (2013/02/01)
+-------------------------------------------------------------------------------
+1. Change the max length of text on video to 128
+
+RTSP streaming server to 2.5.3.8 (2013/01/25)
+-------------------------------------------------------------------------------
+1. Fix the wrong month names of January and February
+
+RTSP streaming server to 2.5.3.7 (2013/01/22)
+-------------------------------------------------------------------------------
+1. Support MOD search timeout
+
+RTSP streaming server to 2.5.3.6 (2012/10/04)
+-------------------------------------------------------------------------------
+1. Fix that connection close because of unicast RTCP socket receiving EWOULDBLOCK
+2. A session identifier MUST be at least eight octets long according to RFC 2326, section 3.4
+
+RTSP streaming server to 2.5.3.5 (2012/09/17)
+-------------------------------------------------------------------------------
+1. Fix that multicast sessions start without forcing I frame
+
+RTSP streaming server to 2.5.3.4 (2012/09/10)
+-------------------------------------------------------------------------------
+1. Fix sessioninfo not concsistent issue:
+   The seesion number in sessioninfo must be concsistent with the managed session number( pClient->bManagedbySessionMgr==TRUE ), not iCurrentSessionNumber.
+
+RTSP streaming server to 2.5.3.3 (2012/08/17)
+-------------------------------------------------------------------------------
+1. Modified H264 RTP marker bit according to RFC3984
+2. Support re-used port in Multicast UDP socket (ifdef _VRNT)
+
+RTSP streaming server to 2.5.3.2, RTSPS version to 1.3.1.7 (2012/06/28)
+-------------------------------------------------------------------------------
+1. Fix Omnicast MJPEG over RTSP multicast failed bug, modified JPEG RTP header extension according to ONVIF spec and RFC2435
+
+RTSP streaming server to 2.5.3.1 (2012/05/29)
+-------------------------------------------------------------------------------
+1. Fix audio shmem handle disordered bug
+2. Fix IPv6 UDP connect fail with errno 22 bug
+
+RTSP streaming server to 2.5.3.0 (2012/02/16)
+-------------------------------------------------------------------------------
+1. Fix double post cause semaphore invalid, it will cause iSessionListNumber confused/segmentation fault
+2. Fix backchannel multicast session terminated, iMulticast not sync
+
+RTSP streaming server to 2.5.2.1 (2012/01/16)
+-------------------------------------------------------------------------------
+1. Support _NO_NEED_H264_PROFILE_NUM deinfe
+2. Support Detect Tampering Watermark, modify MAX_MP4V_HEADER_SIZE from 50 to 80
+3. Fix always multicast incorrect video clockrate at start up
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.2.0 (2011/12/05)
+-------------------------------------------------------------------------------
+1. Fix UDP mode socket leak
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.8, RTSPS version to 1.3.1.6 (2011/11/28)
+-------------------------------------------------------------------------------
+1. Support Backchannel Multicast for ONVIF test tool 1.02.4
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.7 (2011/09/07)
+-------------------------------------------------------------------------------
+1. Fix mediachannel thread lock
+2. Fix iCurrentSessionNumber not sync with SessionMgr
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.6 (2011/08/23)
+-------------------------------------------------------------------------------
+1. Fix alignment trap, if H264 frame size too large cause atIov overflow
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.5, RTSPS version to 1.3.1.5 (2011/08/05)
+-------------------------------------------------------------------------------
+1. Support Multicast RTCP receive report keep alive, use network_rtsp_s0_multicast_rralive and network_rtsp_multicasttimeout
+2. Modify RTP_EXTENSION from 1024 to 1280 for diagnostic image
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.4, RTSPS version to 1.3.1.4 (2011/07/11)
+-------------------------------------------------------------------------------
+1. Fix TCP/HTTP mode socket not sync in multi thread bug
+2. FIx Frame type not match CI bug
+3. Fix Multicast enable/disable parameter not sync bug
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.3, RTSPS version to 1.3.1.3 (2011/06/30)
+-------------------------------------------------------------------------------
+1. Support Multicast socket join/leave multicast group by session start/stop
+2. Support Multicast disable, when network_rtsp_s0_multicast_enable = 0 or Multicast ip address = 0.0.0.0
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.2, RTSPS version to 1.3.1.2 (2011/04/09)
+-------------------------------------------------------------------------------
+1. Support SVC spetial URL/Option
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.1, RTSPS version to 1.3.1.1 (2011/04/01)
+-------------------------------------------------------------------------------
+1. Support RTSPServer thread watchdog
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.1.0, RTSPS version to 1.3.1.0 (2011/01/27)
+-------------------------------------------------------------------------------
+1. Support advanced system log
+2. Support multiple channel media shmem config
+3. JPEG RTP packet support DRI header and TLV extension
+4. Modify GUID format change
+5. Mark audio G711 upstream
+
+-------------------------------------------------------------------------------
+RTSP streaming server to 2.5.0.0, RTSPS version to 1.3.0.0 (2010/11/03)
+-------------------------------------------------------------------------------
+1. Support MOD, add #define MOD_STREAM_TOTAL=4, modify #define MULTIPLE_STREAM_TOTAL=LIVE_STREAM_TOTAL + MOD_STREAM_TOTAL
+2. Add magic number of H264 rtp extension = 7070
+3. Support SIP server optional channels audioout
+4. Fixed Backchannel multicast session terminated, rtsp server has not stopped sending video/audio RTP/RTCP
+5. Support Multicast parameters load dynamicly
+6. Support Multiple channels videoin/audioin, add #define MULTIPLE_CHANNEL_TOTAL=8
+7. Support Client Side Frame Rate Control
+8. Fixed Seamless recording assign LastFrameTime before mediachannel thread set
+9. Fixed Seamless recording negotiate with eventmgr TLV format error
+10. Support GET_PARAMETER command for keep-alive in RTSP signaling
+11. Support Seamless recording special TCP/UDP timeout
+
+-------------------------------------------------------------------------------
+Version 2.4.0.2 (2010/11/02)
+-------------------------------------------------------------------------------
+1. Fixed Vivaldi connected UDP error
+
+-------------------------------------------------------------------------------
+Version 2.4.0.1 (2010/09/23)
+-------------------------------------------------------------------------------
+1. Fixed Taipei city project HTTP/TCP mode start code bug
+
+-------------------------------------------------------------------------------
+Version 2.4.0.0 (2010/07/01)
+-------------------------------------------------------------------------------
+1. Fixed sessioninfo corrupted and session count incorrect issue
+2. Fixed sessionid duplicate cause signaling thread lock issue
+3. Fixed TCP broken frame when frame size exceed 511x1400 BYTES
+4. Fixed Shmem RTP extension TLV issue
+
+-------------------------------------------------------------------------------
+Version 2.3.0.3 (2010/06/04)
+-------------------------------------------------------------------------------
+1. Add callback to update sip sessioninfo
+
+-------------------------------------------------------------------------------
+Version 2.3.0.2 (2010/03/22)
+-------------------------------------------------------------------------------
+1. OPTIONS can now be used for keep-alive in RTSP signaling.
+2. Support force I frame for Genetec.
+3. Debug message for RTSP over HTTP mode.
+
+-------------------------------------------------------------------------------
+Version 2.3.0.1 (2010/03/05)
+-------------------------------------------------------------------------------
+1. Integrate EventMgr API for Seamless recording
+2. Modify Sessioncookie size from 32 to 64
+3. Modify Magic word: VIVOTEK change to StreamingServer
+
+-------------------------------------------------------------------------------
+Version 2.3.0.0 (2010/02/04)
+-------------------------------------------------------------------------------
+1. Support Seamless recording
+2. Fixed session remove incompletely when change codec type
+
+-------------------------------------------------------------------------------
+Version 2.2.0.2 (2009/12/30)
+-------------------------------------------------------------------------------
+1. Add fifo command for Venc to send re-establish unix socket, cmKickWatchDog is used Unintendedly
+2. Fixed TCP broken image, Release Shmem Read Buffer before send out completely
+3. Fixed Audio only port and QoS value disorder
+
+-------------------------------------------------------------------------------
+Version 2.2.0.1 (2009/12/07)
+-------------------------------------------------------------------------------
+1. Unify 503 Service Unavailable is returned when connection limit is reached.
+2. Fixed VitaminCtrl in HTTP mode will cause full-fd issue.
+
+-------------------------------------------------------------------------------
+Version 2.2.0.0 (2009/11/23)
+-------------------------------------------------------------------------------
+1. Add Connected UDP.
+2. Modify UDP and TCP mode to use writev(), omit memcpy()
+3. Add while loop to send all UDP RTP, improve UDP mode performance
+4. Add error handle to unix socket select error in non-share memory
+
+-------------------------------------------------------------------------------
+Version 2.1.0.8 (2009/10/30)
+-------------------------------------------------------------------------------
+1. Fix a bug where multiple DESCRIBE messages will result in calling session 
+   manager multiple times.
+
+-------------------------------------------------------------------------------
+Version 2.1.0.7 (2009/10/09)
+-------------------------------------------------------------------------------
+1. Fix a minor problem where empty URL will lead to stream 3 streaming.
+
+-------------------------------------------------------------------------------
+Version 2.1.0.6 (2009/08/21)
+-------------------------------------------------------------------------------
+1. Change of video codec of specific stream will now result in removing the 
+   clients of that stream.
+2. Support ONVIF live streaming (Tested with ONVIF test tool 1.0).
+3. Some debug message has been added to foreground.
+
+-------------------------------------------------------------------------------
+Version 2.1.0.5 (2009/08/11)
+-------------------------------------------------------------------------------
+1. Added the anti-counterfeit feature to RTSP. To enable this feature you should
+   set the environment variable "ANTICOUNTERFEIT_ENABLE" to "yes".
+   
+-------------------------------------------------------------------------------
+Version 2.1.0.4 (2009/07/23)
+-------------------------------------------------------------------------------
+1. Fixed a problem where "always-multicast" will send out incorrect RTP
+   packet type when using codec type H.264.
+
+-------------------------------------------------------------------------------
+Version 2.1.0.3 (2009/07/23)
+-------------------------------------------------------------------------------
+1. Modify maximum packet count for packet-video mode (From 40 -->120).
+   	
+-------------------------------------------------------------------------------
+Version 2.1.0.2 (2009/07/13)
+-------------------------------------------------------------------------------
+1. Fix G.711 Audio abnormal problem.
+2. Automatic software watchdog mechanism is added. RTSP will now enroll software
+   watchdog if there is an entry of "rtsps" in /etc/conf.d/config_watchlist.xml
+3. When extension overflows RTSP server will write syslog. 
+   
+-------------------------------------------------------------------------------
+Version 2.1.0.1 (2009/06/26)
+-------------------------------------------------------------------------------
+1. Fix an issue where H.264 packet may have erroneous classification. This bug
+   will cause some H.264 NALU to be incorrectly cut. 
+2. Dynamic access name update will now support multiple streams.
+3. Software watchdog is now supported. Please update config_watchlist.xml to enable
+   this feature.
+4. Initial data clean up for video and audio u-buffer.
+5. Some coverity issues are fixed.
+6. Remove xmlsparser warning message in syslog if config file is not specified.
+
+-------------------------------------------------------------------------------
+Version 2.1.0.0 (2009/04/15)
+-------------------------------------------------------------------------------
+1. Multiple Stream is supported in this version. You should define the stream number
+   using environment variable "MULTIPLE_STREAM_TOTAL"
+   For example, "export MULTIPLE_STREAM_TOTAL=3" will give you 3 streams.
+2. Profile manager is now supported. Please update to latest session manager to enable
+   this feature.
+3. Codec type MJPEG & H.264 is now supported in this version.      
+4. Quicktime protocol rolling is now supported.
+5. Quicktime "453 method now allowed" problem is fixed.
+6. RTSP will show warning message if share memory query fail for 5 seconds. It will 
+   also write syslog if log level is LOG_DEBUG.
+
+-------------------------------------------------------------------------------
+Version 2.0.0.4(2009/03/02)
+-------------------------------------------------------------------------------
+1. QOS feature is added. To enable this feature you need to specify the QOS config
+   file with "-q" option. For example "rtsps -q /etc/conf.d/config_qos.xml"
+   If config file is not specified the QOS will be disabled by default.
+2. Fix a potential buffer overrun issue with RTSP signaling.  The long extensions
+   in RTSP signaling will no longer crash the RTSP server.
+   
+-------------------------------------------------------------------------------
+Version 2.0.0.3(2009/01/17)
+-------------------------------------------------------------------------------
+1. When RTSP streaming server is run using non share-memory architecture, TCP mode
+   connection under low bandwidth can sometimes lock the signaling thread.
+   This version fixes this problem for non share-memory architecture.
+2. Initialize the bandwidth factor for share-memory architecture.   
+   (Sometimes realplayer cannot playback the video if uninitialized)
+   
+-------------------------------------------------------------------------------
+Version 2.0.0.2(2008/12/31)
+-------------------------------------------------------------------------------
+1. Audio codec G.711 is now supported. Notice that audio encoder must also 
+   support G.711 for this codec to work.
+2. Fixed a bug that some clients cannot be kicked from session manager.
+   (Session manager session ID overflow)
+3. Share memory now support following parameters "maxsft" "minsft" "reftime" 
+   "forcechk" "tsmode". Please see share memory spec for detailed usage guide.
+   RTSP server will now return share memory status in header.
+4. Added Content-Length field checking to avoid server crash due to very large
+   content length. 
+5. If access list file is not provided as a parameter. The RTSP server will 
+   continue to execute while allowing connection from ALL IPs.   	
+   	
+-------------------------------------------------------------------------------
+Version 2.0.0.1(2008/12/01)
+-------------------------------------------------------------------------------
+1. Fixed a bug when stream 1 is MJPEG, stream 2 is MPEG4. Stream 2 FIFO will be
+   empty.
+2. Fixed a bug where session manager may print negative timestamp.
+3. Added audio u-buffer check for share memory.
+
+-------------------------------------------------------------------------------
+Version 2.0.0.0(2008/11/24)
+-------------------------------------------------------------------------------
+1. Share memory architecture is supported. Please declare "SHMEM_ENABLE=yes"
+   when share memory architecture is used. All models using share memory
+   architecture MUST use version 2.0.0.0 or later.
+2. Time-shift streaming is supported in share memory architecture. To use 
+   time-shift streaming you specify "tsmode" and "bypast" parameter in URL.
+   For example: rtsps://192.168.1.100/live.sdp?tsmode=adaptive&bypast=3
+   This means time-shift adaptive mode with 3 seconds time offset.
+3. Single FIFO mode is supported. If FIFO path in config_streamserver.xml is the
+   same the two FIFO path will be directed to the same FIFO.
+4. Control message will now also carry stream ID information.
+5. URL authentication is supported. To activate URL authentication please
+   add one value to config_streamserver.xml. The value of
+   "/root/network/rtsp/urlauthenable" decides whether URL authentication is 
+   enabled. Value of "1" enables this feature. When this feature is enabled
+   you can simply concatenate username and password in URL to do authentication.
+   For example: rtsps://192.168.1.100/live.sdp?username=root&password=abc
+
+-------------------------------------------------------------------------------
+Version 1.7.1.4(2008/11/13)
+-------------------------------------------------------------------------------
+1. Fix a bug that audio/video encoder is still busy after connection is 
+   disconnected through session manager.
+   
+-------------------------------------------------------------------------------
+Version 1.7.1.3(2008/11/05)
+-------------------------------------------------------------------------------
+1. Fix bug that gettimeofday() return values sometimes will rollback and will be 
+   considered as timeout. This will cause 2-way audio to disconnect.
+
+-------------------------------------------------------------------------------
+Version 1.7.1.2(2008/10/02)
+-------------------------------------------------------------------------------
+1. Fixed bug when Video/Audio stream is started, the next video only stream will
+   cause aenc not to stop properly.
+2. Fixed a warning for session manager feature.   
+
+-------------------------------------------------------------------------------
+Version 1.7.1.1(2008/09/18)
+-------------------------------------------------------------------------------
+1. Fixed bug where audio encoder will not stop after muiltcast audio is stopped.
+2. Fixed location name cannot be empty bug.
+
+-------------------------------------------------------------------------------
+Version 1.7.1.0(2008/07/25)
+-------------------------------------------------------------------------------
+1. Rename "attraction" feature to "anonymousviewing",
+   "enable/disable" changed to "1/0" in config file.
+2. Moved location length definition from rtppacketizer.c to rtsprtpcommon.h
+3. When SESSMGR_ENABLE is defined session manager will manage the maximum 
+   client number. Also, detail client information is stored in XML format 
+   in /var/run/ss/conninfo.
+4. Fifo support dynamic client management (for disconnecting clients)
+5. SIP will accept third party client now.
+
+-------------------------------------------------------------------------------
+Version 1.7.0.1(2008/02/19)
+-------------------------------------------------------------------------------
+1. Added Always multicast video/audio only feature. Config files need to support
+   this feature. Old config files will always multicast both video and audio. 
+2. Fixed multicast problem in introduced in 1.7.0.0.
+
+-------------------------------------------------------------------------------
+Version 1.7.0.0(2008/01/18)
+-------------------------------------------------------------------------------
+1. IPv6 is supported in this version. User environment variable IPV6_ENABLE="yes"
+   to compile the IPV6 version.
+2. RTSP signaling force I frame is properly implemented now.
+3. Web-attraction feature is added in this version.
+4. Multicast loopback flag is turned off.
+
+-------------------------------------------------------------------------------
+Version 1.6.0.4(2007/12/20)
+-------------------------------------------------------------------------------
+1. Fix to intelligent video issue.
+2. Added 2 documents to /doc directory.
+3. Eliminated compile warning.
+
+-------------------------------------------------------------------------------
+Version 1.6.0.3(2007/11/16)
+-------------------------------------------------------------------------------
+1. Added intelligent video Support. It is compatible with cameras without intelligent
+   video source.
+2. Fixed a problem that once multicast session start, the video and audio encoder
+   will never stop (even if no client is connected).
+3. Fixed a problem that refreshing will cause miscount of multicast client number.
+4. Partially removed warning messages while compiling. 
